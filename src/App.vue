@@ -1,19 +1,25 @@
 <template>
   <div id="app">
-    hello world
+    <MHeader/>
+    <router-view/>
   </div>
 </template>
 
 <script>
+import MHeader from 'components/m-header/m-header';
 export default {
+  components:{
+    MHeader
+  },
   name: 'App'
 }
 </script>
 
 <style lang="stylus" scoped>
-  @import "~common/stylus/variable"
-  
-  #app
-    color: $color-theme
+@import '~common/stylus/variable';
+
+#app {
+  color: $color-theme;
+}
 </style>
 
