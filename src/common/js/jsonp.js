@@ -2,7 +2,7 @@ import originJSONP from 'jsonp'
 
 function param (data) {
   let url = ''
-  for (key in data) {
+  for (let key in data) {
     let value = data[key] || ''
     url += `&${key}=${encodeURIComponent(value)}`
   }

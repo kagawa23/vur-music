@@ -1,10 +1,41 @@
 <template>
   <div class="recommend" ref="recommend">
-    This is recommend
+    <slider>
+      <div v-for="item in items" v-bind:key="item.id">
+        <a :href="item.linkUrl">
+          <img :src="item.picUrl">
+        </a>
+      </div>
+    </slider>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import Slider from 'base/slider/slider'
+import { getRecommend } from 'api/recommend'
+import { ERR_OK } from 'api/config'
+export  default {
+  data(){
+    return {
+      items: []
+    }
+  },
+  created(){
+    this._getRecommend();
+  },
+  components:{ Slider},
+  methods:{
+    _getRecommend:function(){
+      getRecommend().then(({code,data:{slider}})=>{
+        if(code === ERR_OK){
+          console.log(slider);
+          this.items = slider;
+        }
+      })
+    }
+  }
+
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
