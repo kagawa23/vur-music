@@ -1,12 +1,14 @@
 <template>
   <div class="recommend" ref="recommend">
-    <slider>
+    <div class="recommend">
+      <div v-if="items.length" class="slider-wrapper">
+        <slider>
       <div v-for="item in items" v-bind:key="item.id">
         <a :href="item.linkUrl">
           <img :src="item.picUrl">
         </a>
       </div>
-    </slider>
+    </slider></div></div>
   </div>
 </template>
 
