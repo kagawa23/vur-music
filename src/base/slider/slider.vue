@@ -5,6 +5,7 @@
       </slot>
     </div>
     <div class="dots">
+      <span class="dot" :class="{ active: currentPage ===idx }" v-for="(dot,idx) in dots" v-bind:key="idx"/>
     </div>
   </div>
 </template>
@@ -28,9 +29,16 @@ import { addClass } from 'common/js/dom';
         default: 4000
       }
     },
+    data(){
+      return {
+        dots:[],
+        currentPage:0
+      }
+    },
     created(){
       setTimeout(()=>{
         this._setSliderWidth();
+        this._initDots();
         this._initSlider();
       },20)
     },
@@ -50,16 +58,20 @@ import { addClass } from 'common/js/dom';
         }
         this.$refs.sliderGroup.style.width = width + 'px';
       },
+      _initDots(){
+        this.dots = new Array(this.$refs.sliderGroup.childElementCount);
+      },
       _initSlider(){
-        console.log(BScroll);
         this.slider = new BScroll(this.$refs.slider,{
           scrollX:true,
           scrollY:false,
           momentum:false,
-          snap:true,
-          snapLoop:this.loop,
-          snapThreshold:0.3,
-          snapSpeed:400,
+          snap: {
+            loop: this.loop,
+            threshold: 0.3,
+            stepX: 400,
+          },
+          click:true
         })
       }
     }

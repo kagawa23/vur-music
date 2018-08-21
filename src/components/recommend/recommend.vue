@@ -1,6 +1,6 @@
 <template>
   <div class="recommend" ref="recommend">
-    <div class="recommend">
+    <div class="recommend-content">
       <div v-if="items.length" class="slider-wrapper">
         <slider>
       <div v-for="item in items" v-bind:key="item.id">
