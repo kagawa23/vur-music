@@ -35,15 +35,35 @@ import { addClass } from 'common/js/dom';
         currentPage:0
       }
     },
+    destroyed(){
+      clearTimeout(this.timer);
+    },
     created(){
       setTimeout(()=>{
         this._setSliderWidth();
         this._initDots();
         this._initSlider();
-      },20)
+
+        if(this.autoPlay){
+          this._play()
+        }
+      },20);
+
+      window.addEventListener('resize',()=>{
+        if(!this.slider)
+          return;
+        this._setSliderWidth(true)
+        this.slider.refresh();
+      })
     },
     methods:{
-      _setSliderWidth(){
+      _play(){
+        let pageIdx = this.currentPage +1;
+        this.timer = setTimeout(()=>{
+          this.slider.goToPage(pageIdx, 0, 400)
+        },this.interval)
+      },
+      _setSliderWidth(isResize){
         this.children = this.$refs.sliderGroup.children;
         let width = 0;
         let sliderWidth = this.$refs.slider.clientWidth;
@@ -53,7 +73,7 @@ import { addClass } from 'common/js/dom';
           child.style.width = sliderWidth + 'px';
           width +=sliderWidth;
         }
-        if(this.loop){
+        if(this.loop&& !isResize){
           width += 2*sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px';
@@ -69,10 +89,19 @@ import { addClass } from 'common/js/dom';
           snap: {
             loop: this.loop,
             threshold: 0.3,
-            stepX: 400,
           },
           click:true
         })
+        this.slider.on('scrollEnd',()=>{
+          let pageIdx = this.slider.getCurrentPage().pageX;
+          this.currentPage = pageIdx;
+          if(this.timer){
+            clearTimeout(this.timer);
+          }
+          if(this.autoPlay){
+            this._play();
+          }
+        });
       }
     }
   }
