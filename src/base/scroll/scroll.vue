@@ -19,6 +19,10 @@ export default {
     refreshDelay: {
       type: Number,
       default: 20
+    },
+    listenScroll: {
+      type: Boolean,
+      default:false,
     }
   },
   mounted(){
@@ -33,9 +37,13 @@ export default {
       }
       this.scroll = new BScroll(this.$refs.wrapper,{
         probeType:this.probeType,
-        scrollX:false,
-        scrollY:true,
       })
+      if(this.listenScroll){
+        let me = this;
+        this.scroll.on('scroll',function(pos){
+          me.$emit('scroll',pos);
+        })
+      }
     },
     disable() {
       this.scroll && this.scroll.disable()
