@@ -25,6 +25,9 @@
           </li>
         </ul>
       </div>
+      <div class="loading-container" :show="!discList.length">
+        <loading/>
+      </div>
       </div>
     </scroll>
   </div>
@@ -32,6 +35,7 @@
 
 <script type="text/ecmascript-6">
 import Slider from 'base/slider/slider'
+import Loading from 'base/loading/loading'
 import { getRecommend,getDiscList } from 'api/recommend'
 import { ERR_OK } from 'api/config'
 import Scroll from 'base/scroll/scroll'
@@ -46,7 +50,7 @@ export  default {
     this._getRecommend();
     this._getDisc();
   },
-  components:{ Slider, Scroll},
+  components:{ Slider, Scroll, Loading},
   methods:{
     _getRecommend:function(){
       getRecommend().then(({code,data:{slider}})=>{
@@ -132,7 +136,6 @@ export  default {
     }
 
     .loading-container {
-      position: absolute;
       width: 100%;
       top: 50%;
       transform: translateY(-50%);
