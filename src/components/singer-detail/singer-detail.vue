@@ -1,12 +1,20 @@
 <template>
   <transition name="slide">
-    <div class="music-list">Singer detail</div>
+    <div class="music-list">Singer detail
+      {{JSON.stringify(singer)}}
+    </div>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
-export default {
+import { mapGetters } from 'vuex'
 
+export default {
+  computed:{
+      ...mapGetters([
+        'singer'
+      ]),
+  }
 }
 </script>
 
