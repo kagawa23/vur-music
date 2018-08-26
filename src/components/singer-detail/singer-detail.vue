@@ -8,8 +8,51 @@
 
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex'
+import { getSingerDetail, getSingerList } from 'api/singer'
+import { ERR_OK } from 'api/config'
+import { getSongUrl } from 'api/song'
+import { createSong } from 'common/js/song'
 
 export default {
+  data(){
+    return {
+      songs:[]
+    }
+  },
+  methods:{
+    _getSinger(){
+      if(!this.singer.id){
+        this.$router.push('/singer');
+      }
+      getSingerDetail(this.singer.id).then(async ({code,data:{list}}) =>{
+        if(code == ERR_OK ){
+          console.log(list)
+          this.songs = await this._normalizeSongs(list)
+          console.log(this.songs);
+        }
+      });
+    },
+   async _normalizeSongs(list){
+    const {mids,types} = list.reduce((ret,{musicData})=>{
+      const { mids , types } = ret;
+      return {mids:[...mids,musicData.songmid],types:[...types,musicData.songtype]}
+    },{mids:[],types:[]})
+    const urlData = await getSongUrl(mids,types);
+   // console.log(urlData.url_mid);
+    return list.reduce((ret,item,idx)=>{
+      const { musicData
+      } = item;
+      const {purl} = urlData.url_mid.data.midurlinfo[idx]
+      // console.log(purl);
+      if(musicData.songid && musicData.albumid){
+        return [...ret, createSong(musicData,purl)]
+      }
+    },[])
+   }
+  },
+  created(){
+    this._getSinger();
+  },
   computed:{
       ...mapGetters([
         'singer'

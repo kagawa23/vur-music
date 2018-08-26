@@ -17,8 +17,8 @@ var options = {
   target: 'https://c.y.qq.com', // target host
   changeOrigin: true, // needed for virtual hosted sites
   pathRewrite: function (path, req) {
-    console.log(path)
-    console.log(req.query)
+    // console.log(path)
+    // console.log(req.query)
     return path.replace(
       '/api/getDiscList',
       '/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
@@ -27,6 +27,19 @@ var options = {
   headers: {
     referer: 'https://c.y.qq.com/',
     host: 'c.y.qq.com'
+  }
+}
+
+const options2 = {
+  target: 'https://u.y.qq.com', // target host
+  changeOrigin: true, // needed for virtual hosted sites
+  pathRewrite: function (path, req) {
+    return path.replace('/api/getPurlUrl', '/cgi-bin/musicu.fcg')
+  },
+  headers: {
+    referer: 'https://y.qq.com/',
+    origin: 'https://y.qq.com',
+    'Content-type': 'application/x-www-form-urlencoded'
   }
 }
 
@@ -62,7 +75,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       : false,
     publicPath: config.dev.assetsPublicPath,
     // proxy: config.dev.proxyTable,
-    proxy: { '/api': options },
+    proxy: {
+      '/api/getDiscList': options,
+      '/api/getPurlUrl': options2
+    },
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll
